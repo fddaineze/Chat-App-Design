@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <form @submit.prevent="sendMessage">
+            <!-- HEADER -->
+            <div class="header">
+                <label>Identificação</label>
+                <input type="text" v-model="author" class="my-input" id="esconder" placeholder="Username" />
+            </div>
+            <!-- MESSAGE AREA -->
+            <div class="messagearea">
+                <p :class="checkAuthor(msg.author)" v-for="(msg, index) in messages" :key="index">
+                    <span class="author">{{ msg.author }}</span>
+                    <span class="text">{{ msg.message }}</span>
+                </p>
+            </div>
+            <!-- FOOTER -->
+            <div class="footer">
+                <input type="text" v-model="message" class="my-input" placeholder="Send Message" />
+                <button type="submit" class="my-button">Send</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                author: "Usuário",
+                message: "",
+                // Exemplo de mensagens
+                messages: [
+                    {author: "Maninha", message: "Bom dia!"},
+                    {author: "Usuário", message: "E aí menina! Tudo bem?"},
+                    {author: "Maninha", message: "Tudo bem! E com vc?"},
+                    {author: "Usuário", message: "Tudo ótimo!"}
+                ]
+            },
+            methods: {
+                checkAuthor(author) {
+                    if (this.author) {
+                    return author == this.author
+                        ? "message mymessage"
+                    : "message yourmessage";
+                    }
+                    return "message";
+                },
+                renderMessage(message) {
+                    this.messages.push(message);
+                    this.$nextTick(() => {
+                    let area = document.getElementsByClassName("messagearea")[0];
+                    area.scrollTo(0, area.scrollHeight);
+                    });
+                },
+                sendMessage(e) {
+                    e.preventDefault;
+                    if (this.author && this.message) {
+                    const objMessage = {
+                        author: this.author,
+                        message: this.message
+                    };
+                    this.renderMessage(objMessage);
+                    this.message = "";
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
